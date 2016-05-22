@@ -15,47 +15,62 @@
 //예외 처리 : 사원의 숫자가 5이상인 경우 => 5개 마다 줄바꿈 출력
 
 
-
 //오류 처리 001 : 프로그램 실행시 숫자가 입력되지 않는경우 => --help 출력 유도
 //오류 처리 002 : 프로그램 실행시 인자가 2개이상 들어오는 경우 =>  --help 출력 유도
 //오류 처리 003 : 프로그램 실행시 입력이 숫자가 아닌경우 ==> --help 출력 유도
 //오류 처리 004 : 프로그램 실행시 숫자가 0이나 음의 정수로 입력되는경우 => --help 출력 유도
 
-
-
 #include<iostream>
 #include<cctype>
-#include<cstring>
+#include<string>
+
+#define STAFF_NUM_SIZE 99999
 
 int errorHandling_IO(int argc, char** argv){
 
 	int digIter = 0;
-	int numberLength = strlen(argv[1]);
-
-	if (argc < 2){ std::cout << "[error 001] : invaild input ";  return 0; }
-	else if (argc >= 3){ std::cout << "[error 002] : invaild input"; return 0; }
 	
-	for (digIter = 0; digIter < numberLength; digIter){
-		if (isdigit(argv[1][digIter] == 0)) {
-			std::cout << "[error 003] :invaild input";
+	//[error 001]
+	if (argc < 2){ std::cout << "[error 001] : invaild input\n";  return 0; }
+	//[error 002]
+	else if (argc >= 3){ std::cout << "[error 002] : invaild input\n"; return 0; }
+	
+	//[error 003]
+	for (digIter = 0; digIter < strlen(argv[1]); digIter++){
+		if (isdigit(argv[1][digIter]) == 0) {
+			std::cout << "[error 003] :invaild input\n";
 			return 0;
 		}
+	}
+	//[error 004]
+	if (std::stoi(argv[1], nullptr) <= 0){
+		std::cout << "[error 004] :invaild input\n";
+		return 0;
 	}
 
 	return 1;
 
 }
 
+//make lookupTable ( default value :true)
+bool* makeLUT(){
+	bool* LUT = new bool[STAFF_NUM_SIZE];
+	return LUT;
+}
 int printHelp(int errorCode){
 	//에러 코드에 따라 help를 bold 하여 출력
+	return 0;
 }
+
+
+
 
 int main(int argc, char** argv){
 	if ((errorHandling_IO(argc, argv))){
-		//making Staff number
+		bool* LUT = makeLUT();
+
+
 	}
-
-
 	return 1;
 
 }
