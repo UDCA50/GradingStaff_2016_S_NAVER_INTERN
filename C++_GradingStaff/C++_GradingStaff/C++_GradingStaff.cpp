@@ -23,10 +23,11 @@
 #include<iostream>
 #include<cctype>
 #include<string>
+#include<vector>
 
 #define STAFF_NUM_SIZE 99999
 
-int errorHandling_IO(int argc, char** argv){
+int errorHandling_Para(int argc, char** argv){
 
 	int digIter = 0;
 	
@@ -52,25 +53,42 @@ int errorHandling_IO(int argc, char** argv){
 
 }
 
-//make lookupTable ( default value :true)
-bool* makeLUT(){
-	bool* LUT = new bool[STAFF_NUM_SIZE];
-	return LUT;
+//make lookupTable 
+// 추가적으로 점수를 저장할 필요가 있다면 => vector 를 hashmap 으로 변환
+std::vector<int>* makeLUT(){
+	std::vector<int>* numberLUT = new std::vector<int>;
+	for (int i = 0; i <= STAFF_NUM_SIZE; i++){
+		numberLUT->push_back(i);
+	}
+	return numberLUT;
+
+}
+//난수로 사번생성
+int generateRand(){
+
 }
 int printHelp(int errorCode){
 	//에러 코드에 따라 help를 bold 하여 출력
 	return 0;
 }
 
-
+	
 
 
 int main(int argc, char** argv){
-	if ((errorHandling_IO(argc, argv))){
-		bool* LUT = makeLUT();
 
+	//parameter error handle
+	if ((errorHandling_Para(argc, argv))){
+	
 
+		//make LUT
+		std::vector<int>* numberLUT = makeLUT();
+
+		//access randomly
 	}
+
+
+
 	return 1;
 
 }
