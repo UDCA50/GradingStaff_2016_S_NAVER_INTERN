@@ -18,15 +18,16 @@
 //오류 처리 001 : 프로그램 실행시 숫자가 입력되지 않는경우
 //오류 처리 002 : 프로그램 실행시 인자가 2개이상 들어오는 경우
 //오류 처리 003 : 프로그램 실행시 입력이 숫자가 아닌경우
-//오류 처리 004 : 프로그램 실행시 숫자가 0이나 음의 정수이거나 입력이 999999를 넘어가는경우
+//오류 처리 004 : 프로그램 실행시 숫자가 0이나 음의 정수이거나 입력이 99999를 넘어가는경우
 
 #include<iostream>
 #include<cctype>
 #include<string>
 #include<vector>
+#include<set>
 #include<random>
 #include<cstdint>
-
+#include<iomanip>
 
 #define STAFF_NUM_SIZE 99999
 
@@ -48,7 +49,7 @@ int errorHandling_Para(int argc, char** argv){
 	}
 	int inputValue = std::stoi(argv[1], nullptr);
 	//[error 004]
-	if (inputValue <= 0 && inputValue>100000 ){
+	if (inputValue <= 0 && inputValue>10000 ){
 		std::cout << "[error 004] :invaild input\n";
 		return 0;
 	}
@@ -61,7 +62,7 @@ int errorHandling_Para(int argc, char** argv){
 // 추가적으로 점수를 저장할 필요가 있다면 => vector 를 hashmap 으로 변환
 std::vector<int>* makeLUT(){
 	std::vector<int>* numberLUT = new std::vector<int>;
-	for (int i = 0; i <= STAFF_NUM_SIZE; i++){
+	for (int i = 1; i <= STAFF_NUM_SIZE; i++){
 		numberLUT->push_back(i);
 	}
 	return numberLUT;
@@ -72,24 +73,24 @@ std::vector<int>* makeLUT(){
 //난수 생성 - 메르센 트위스터 엔진
 std::uniform_int_distribution<int>::result_type generateRand(int max){
 	//MT19937
-	static std::mersenne_twister_engine<std::uint_fast32_t, 32, 624, 397, 31,
-		0x9908b0df, 11,
-		0xffffffff, 7,
-		0x9d2c5680, 15,
-		0xefc60000, 18, 1812433253> engine{};
-	static std::uniform_int_distribution<int> dist{ 0, max};
+	static std::default_random_engine engine{};
+	static std::uniform_int_distribution<int> dist{ 1, max};
 	return dist(engine);
 
 }
 
-int generateNum(unsigned int requestNumber, std::vector<int>* numberLUT){
+int generateNum(std::vector<int>* numberLUT){
 	int i = 0;
-	for (i = 0; i < requestNumber; i++){
-		int gen_number = generateRand(numberLUT->size());
-		std::cout << numberLUT->at(gen_number) << std::endl;
-		numberLUT->erase(numberLUT->begin() + gen_number-1);
-	}
-	return 1;
+	int j = 0;
+	int gen_number = 0;
+	int returnNumber = 0;
+		gen_number = generateRand(numberLUT->size());
+		returnNumber = numberLUT->at(gen_number);
+		numberLUT->erase(numberLUT->begin() + gen_number);
+		return returnNumber;
+}
+void printNumber(int generateNum){
+	std::cout << generateNum << std::endl;
 }
 int printHelp(int errorCode){
 	//에러 코드에 따라 help를 bold 하여 출력
@@ -110,7 +111,11 @@ int main(int argc, char** argv){
 		std::vector<int>* numberLUT = makeLUT();
 
 		//make Number & print Number
-		generateNum(requestNumber, numberLUT);
+		int j = 0;
+		for ( j = 0; j < requestNumber; j++){
+			std::cout << numberLUT->size() << " ";
+			printNumber(generateNum(numberLUT));
+		}
 
 	}
 
