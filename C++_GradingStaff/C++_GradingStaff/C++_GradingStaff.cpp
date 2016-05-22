@@ -20,7 +20,7 @@
 //오류 처리 004 : 프로그램 실행시 숫자가 0이나 음의 정수이거나 입력이 99999를 넘어가는경우
 
 #define _CRT_RAND_S
-#define STAFF_NUM_SIZE 10
+#define STAFF_NUM_SIZE 99999
 
 #include<iostream>
 #include<cctype>
@@ -72,7 +72,7 @@ std::vector<int>* makeLUT(){
 }
 
 
-//난수 생성 - 메르센 트위스터 엔진
+//난수 생성 - s_rand 사용
 int generateRand(int max){
 	int i;
 	unsigned int number;
@@ -93,7 +93,7 @@ int generateNum(std::vector<int>* numberLUT){
 	return returnNumber;
 }
 void printNumber(int generateNum){
-	std::cout << generateNum << " " << generateRand(99) << std::endl;
+	
 }
 
 int main(int argc, char** argv){
@@ -112,7 +112,10 @@ int main(int argc, char** argv){
 		for (j = 0; j < requestNumber; j++){
 			std::cout <<"NT";
 			std::cout << std::setfill('0') << std::setw(5);
-			printNumber(generateNum(numberLUT));
+			std::cout << generateNum(numberLUT) << " " << generateRand(99) << " ";
+			if (j%5==4){
+				std::cout << std::endl;
+			}
 		}
 
 	}
