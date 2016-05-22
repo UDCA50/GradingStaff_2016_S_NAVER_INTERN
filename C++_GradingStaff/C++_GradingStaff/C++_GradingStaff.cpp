@@ -15,21 +15,24 @@
 //예외 처리 : 사원의 숫자가 5이상인 경우 => 5개 마다 줄바꿈 출력
 
 
-//오류 처리 001 : 프로그램 실행시 숫자가 입력되지 않는경우 => --help 출력 유도
-//오류 처리 002 : 프로그램 실행시 인자가 2개이상 들어오는 경우 =>  --help 출력 유도
-//오류 처리 003 : 프로그램 실행시 입력이 숫자가 아닌경우 ==> --help 출력 유도
-//오류 처리 004 : 프로그램 실행시 숫자가 0이나 음의 정수로 입력되는경우 => --help 출력 유도
+//오류 처리 001 : 프로그램 실행시 숫자가 입력되지 않는경우
+//오류 처리 002 : 프로그램 실행시 인자가 2개이상 들어오는 경우
+//오류 처리 003 : 프로그램 실행시 입력이 숫자가 아닌경우
+//오류 처리 004 : 프로그램 실행시 숫자가 0이나 음의 정수이거나 입력이 999999를 넘어가는경우
 
 #include<iostream>
 #include<cctype>
 #include<string>
 #include<vector>
+#include<random>
+#include<cstdint>
+
 
 #define STAFF_NUM_SIZE 99999
 
 int errorHandling_Para(int argc, char** argv){
 
-	int digIter = 0;
+	unsigned int digIter = 0;
 	
 	//[error 001]
 	if (argc < 2){ std::cout << "[error 001] : invaild input\n";  return 0; }
@@ -43,8 +46,9 @@ int errorHandling_Para(int argc, char** argv){
 			return 0;
 		}
 	}
+	int inputValue = std::stoi(argv[1], nullptr);
 	//[error 004]
-	if (std::stoi(argv[1], nullptr) <= 0){
+	if (inputValue <= 0 && inputValue>100000 ){
 		std::cout << "[error 004] :invaild input\n";
 		return 0;
 	}
@@ -63,31 +67,52 @@ std::vector<int>* makeLUT(){
 	return numberLUT;
 
 }
-//난수로 사번생성
-int generateRand(){
 
+
+//난수 생성 - 메르센 트위스터 엔진
+std::uniform_int_distribution<int>::result_type generateRand(int max){
+	//MT19937
+	static std::mersenne_twister_engine<std::uint_fast32_t, 32, 624, 397, 31,
+		0x9908b0df, 11,
+		0xffffffff, 7,
+		0x9d2c5680, 15,
+		0xefc60000, 18, 1812433253> engine{};
+	static std::uniform_int_distribution<int> dist{ 0, max};
+	return dist(engine);
+
+}
+
+int generateNum(unsigned int requestNumber, std::vector<int>* numberLUT){
+	int i = 0;
+	for (i = 0; i < requestNumber; i++){
+		int gen_number = generateRand(numberLUT->size());
+		std::cout << numberLUT->at(gen_number) << std::endl;
+		numberLUT->erase(numberLUT->begin() + gen_number-1);
+	}
+	return 1;
 }
 int printHelp(int errorCode){
 	//에러 코드에 따라 help를 bold 하여 출력
 	return 0;
 }
 
-	
 
 
 int main(int argc, char** argv){
+	
 
 	//parameter error handle
 	if ((errorHandling_Para(argc, argv))){
 	
-
+		//request number
+		unsigned int requestNumber = std::stoi(argv[1], nullptr, 10);
 		//make LUT
 		std::vector<int>* numberLUT = makeLUT();
 
-		//access randomly
+		//make Number & print Number
+		generateNum(requestNumber, numberLUT);
+
 	}
-
-
 
 	return 1;
 
